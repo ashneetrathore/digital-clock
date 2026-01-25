@@ -5,7 +5,7 @@ Date: May 2025\
 Developer(s): Ashneet Rathore\
 Based on assignment instructions from Prof. Amir Rahmani
 
-Embedded Digital Clock is an embedded systems project using an ATMega32 microcontroller. The system integrates a keypad and LCD on a breadboard circuit to display the current date and time and respond to real-time user input. Using the keypad, users can set the date and time, as well as toggle between military time and 12-hour AM/PM format.
+Embedded Digital Clock is an ATMega32 microcontroller-based system that continuously tracks the current date and time and supports real-time user configuration. Integrated into a breadboard circuit, the LCD displays the current date and time and the keypad allows users to update the time configuration, as well as toggle between military time and 12-hour AM/PM format.
 
 View more of my embedded programming projects on GitHub [here](https://github.com/stars/ashneetrathore/lists/systems-programming-software)
 
