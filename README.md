@@ -18,7 +18,7 @@ User interaction is implemented using **polling-based keypad scanning**, allowin
 
 ## :open_file_folder: PROJECT FILE STRUCTURE
 ```bash
-EmbeddedDigitalClock/
+digital-clock/
 │── main.c                  # Implements main program logic for the digital clock
 │── avr.h                   # Defines AVR macros and timing utilities
 │── lcd.h                   # Declares LCD control and display functions
