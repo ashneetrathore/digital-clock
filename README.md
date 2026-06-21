@@ -2,32 +2,29 @@
 
 ## :open_book: OVERVIEW
 Date: May 2025\
-Developer(s): Ashneet Rathore\
-Based on assignment instructions from Prof. Amir Rahmani
+Developer(s): Ashneet Rathore
 
-Embedded Digital Clock is an ATMega32 microcontroller-based system that continuously tracks the current date and time and supports real-time user configuration. Integrated into a breadboard circuit, the LCD displays the current date and time and the keypad allows users to update the time configuration, as well as toggle between military time and 12-hour AM/PM format.
-
-View more of my embedded programming projects on GitHub [here](https://github.com/stars/ashneetrathore/lists/systems-programming-software)
+Embedded Digital Clock is an ATMega32 microcontroller-based system that continuously tracks the current date and time and supports real-time user configuration. Integrated into a breadboard circuit, the LCD displays the current date and time and the keypad allows users to update the time, as well as toggle between military time and 12-hour AM/PM format.
 
 ## :brain: FIRMWARE DESIGN
-Run in **Microchip Studio**, the firmware for the embedded digital clock is built around a **state machine architecture** that cleanly separates normal timekeeping from user configuration. In the `RUNNING` state, the clock advances and displays time continuously, while transitioning through the `SET_YEAR`, `SET_MONTH`, `SET_DAY`, `SET_HOUR`, `SET_MINUTE`, and `SET_SECOND` states allow the user to modify each field sequentially. A `STATIC` state temporarily halts time progression while configuration is finalized, ensuring predictable and controlled state transitions.
+Run in **Microchip Studio**, the firmware for the embedded digital clock is built around a **state machine architecture** that cleanly separates normal timekeeping from user configuration. In the `RUNNING` state, the clock advances and displays time continuously. Transitioning through the `SET_YEAR`, `SET_MONTH`, `SET_DAY`, `SET_HOUR`, `SET_MINUTE`, and `SET_SECOND` states allow the user to modify each field sequentially. A `STATIC` state temporarily halts time progression while configuration is finalized, ensuring predictable and controlled state transitions.
 
-The core time data is encapsulated in a `DateTime` struct, storing the current year, month, day, hour, minute, and second. Time progression is handled by the `advance_dt()` function, which increments the clock in one-second steps and correctly propagates rollovers across seconds, minutes, hours, days, months, and years. Calendar correctness is maintained through **invalid time checking**, where user inputs are validated to enforce legal ranges for each field, and **leap year handling**, where February's day count is dynamically updated based on the current year. The `print_dt()` function is responsible for formatting and displaying the date and time on the LCD, supporting both **military (24-hour) mode** and **standard 12-hour AM/PM mode**, which can be toggled by the user at runtime. 
+Time progression correctly propagates rollovers across seconds, minutes, hours, days, months, and years. **Leap year handling** dynamically updates February's day count and **invalid time checking** enforces legal ranges for each field. The display supports both **military (24-hour)** and **standard 12-hour AM/PM** modes, which can be toggled by the user at runtime. 
 
-User interaction is implemented using **polling-based keypad scanning**, allowing real-time input without interrupts. Key presses drive state transitions, numeric entry for date and time fields, and mode toggling, with immediate feedback provided on the LCD. Invalid entries are detected and reported to the user, who is then prompted to reenter the value for the field. **Timing**, implemented through the `avr_wait()` function, is managed using simple millisecond delays, which is sufficient for reliable one-second clock updates and responsive user input.
+User interaction uses **polling-based keypad scanning** for real-time input without interrupts. Key presses drive state transitions, numeric entry, and mode toggling, with immediate feedback on the LCD. Timing is managed using millisecond delays.
 
 ## :open_file_folder: PROJECT FILE STRUCTURE
 ```bash
 digital-clock/
-│── main.c                  # Implements main program logic for the digital clock
-│── avr.h                   # Defines AVR macros and timing utilities
-│── lcd.h                   # Declares LCD control and display functions
-│── lcd.c                   # Implements LCD control and display functions
+│── main.c                  # Main program logic for the digital clock
+│── avr.h                   # AVR macros and timing utilities
+│── lcd.h                   # LCD control and display function declarations
+│── lcd.c                   # LCD control and display function implementations
 │── assets/               
 │   │── circuit_image.jpg   # Image of finished circuit
 │   └── schematic.png       # Schematic of circuit
 │── README.md               # Project documentation
-└── .gitignore              # Excludes files and folders from version control
+└── .gitignore              # Ignored files
 ```
 
 ## :gear: CIRCUIT SET UP GUIDE
@@ -71,11 +68,11 @@ The voltage regulator has three pins: input (Pin 1), ground (Pin 2), and output 
 ### :hourglass: CONNECTING THE 8 MHZ CRYSTAL TO THE MICROCONTROLLER
 1. Connect one leg of a 8 MHz crystal to XTAL2 (Pin 12) on the microcontroller.
 2. Connect the other leg of the crystal to XTAL1 (Pin 13) on the microcontroller.
->[!IMPORTANT]
-> When running the program in Microchip Studio, configure the fuses:
-> 1. In the top navigation bar, go to *Tools* → *Device Programming* → *Fuses* → *LOW_SUT_CKSEL*.
-> 2. Select *Ext.Crystal/Resonator High Freq: Start-up time: 16k CK + 64 ms*.
-> 3. Click *Program*.
+
+### :wrench: CONFIGURING THE FUSES IN MICROCHIP STUDIO
+1. In the top navigation bar, go to *Tools* → *Device Programming* → *Fuses* → *LOW_SUT_CKSEL*.
+2. Select *Ext. Crystal/Resonator High Freq: Start-up time: 16k CK + 64 ms*.
+3. Click *Program*.
 
 ### :1234: CONNECTING THE KEYPAD TO THE MICROCONTROLLER
 1. Connect the 8 keypad pins to PORT C of the microcontroller as shown below:
@@ -92,7 +89,7 @@ The voltage regulator has three pins: input (Pin 1), ground (Pin 2), and output 
     | R3                | PC4 (Pin 26)        | 
 
 ### :framed_picture: CONNECTING THE LCD TO THE MICROCONTROLLER
-The LCD has a total of 16 pins, including source pins that supply power to the display, control pins that manage its operation, and data pins that carry the information displayed.
+The LCD has a total of 16 pins, including source pins that supply power to the display, control pins that manage its operation, and data pins that carry the information displayed. LCD Pins 15 and 16 are unused for this project.
 1. To supply power to the LCD, connect VSS (LCD Pin 1) to the negative rail of the breadboard and VDD (LCD Pin 2) to the positive rail.
 2. Connect one leg of a 1k resistor to VO (LCD Pin 3) and the other leg to the negative rail of the breadboard.
 3. Connect the control pins of the LCD to PORT B of the microcontroller as shown below:
@@ -115,9 +112,6 @@ The LCD has a total of 16 pins, including source pins that supply power to the d
     | DB5 (Pin 12)      | PD5 (Pin 19)        |
     | DB6 (Pin 13)      | PD6 (Pin 20)        |
     | DB7 (Pin 14)      | PD7 (Pin 21)        | 
-
->[!NOTE]
-> LCD Pins 15 and 16 are unused for this project.
 
 ## :point_up_2: KEYPAD CONTROLS
 | Key | State      | Function                                                  |
