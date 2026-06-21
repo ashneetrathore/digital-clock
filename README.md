@@ -21,7 +21,7 @@ digital-clock/
 │── lcd.h                   # LCD control and display function declarations
 │── lcd.c                   # LCD control and display function implementations
 │── assets/               
-│   │── circuit_image.jpg   # Image of finished circuit
+│   │── circuit_image.jpg   # Image of circuit
 │   └── schematic.png       # Schematic of circuit
 │── README.md               # Project documentation
 └── .gitignore              # Ignored files
