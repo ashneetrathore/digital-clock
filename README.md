@@ -9,7 +9,7 @@ Embedded Digital Clock is an ATMega32 microcontroller-based system that continuo
 ## :brain: FIRMWARE DESIGN
 Run in **Microchip Studio**, the firmware for the embedded digital clock is built around a **state machine architecture** that cleanly separates normal timekeeping from user configuration. In the `RUNNING` state, the clock advances and displays time continuously. Transitioning through the `SET_YEAR`, `SET_MONTH`, `SET_DAY`, `SET_HOUR`, `SET_MINUTE`, and `SET_SECOND` states allow the user to modify each field sequentially. A `STATIC` state temporarily halts time progression while configuration is finalized, ensuring predictable and controlled state transitions.
 
-Time progression correctly propagates rollovers across seconds, minutes, hours, days, months, and years. **Leap year handling** dynamically updates February's day count and **invalid time checking** enforces legal ranges for each field. The display supports both **military (24-hour)** and **standard 12-hour AM/PM** modes, which can be toggled by the user at runtime. 
+Time progression correctly propagates rollovers across seconds, minutes, hours, days, months, and years. Leap year handling dynamically updates February's day count and invalid time checking enforces legal ranges for each field. The display supports both military (24-hour) and standard 12-hour AM/PM modes, which can be toggled by the user at runtime. 
 
 User interaction uses **polling-based keypad scanning** for real-time input without interrupts. Key presses drive state transitions, numeric entry, and mode toggling, with immediate feedback on the LCD. Timing is managed using millisecond delays.
 
